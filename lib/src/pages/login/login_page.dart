@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_app/src/pages/login/login_controller.dart';
 import 'package:flutter_app/src/utils/my_colors.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,42 +10,21 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class AccessPoint {
-  static Future<http.Response> token(String email, String password) async {
-    final data = '${email}:${password}';
-    print(data);
-    final Codec<String, String> stringToBase64 = utf8.fuse(base64);
-    return await http.get(Uri.parse(
-        'https://locahost:3000/api/auth/token?data=${stringToBase64.encode(data)}'));
-  }
-}
-
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController emailTextController = TextEditingController();
-  TextEditingController passwordTextController = TextEditingController();
-
-  void _accessToken(BuildContext context) {
-    // ignore: unnecessary_lambdas
-    AccessPoint.token(emailTextController.text, passwordTextController.text)
-        .then((http.Response value) => {
-              Navigator.of(context)
-                  .pushNamed('dash', arguments: emailTextController.text)
-            })
-        // ignore: invalid_return_type_for_catch_error
-        .catchError(print);
-  }
+  LoginController loginController = LoginController();
 
   @override
   void initState() {
     super.initState();
-    emailTextController = TextEditingController();
-    passwordTextController = TextEditingController();
+
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      loginController.init(context);
+    });
   }
 
   @override
   void dispose() {
-    emailTextController.dispose();
-    passwordTextController.dispose();
+    loginController.dispose();
     super.dispose();
   }
 
@@ -103,19 +82,21 @@ class _LoginPageState extends State<LoginPage> {
             color: MyColors.primaryOpacityColor,
             borderRadius: BorderRadius.circular(30)),
         child: TextField(
-            decoration: InputDecoration(
-              hintText: 'Correo electronico',
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.all(15),
-              hintStyle: TextStyle(
-                color: MyColors.primaryColorDark,
-              ),
-              prefixIcon: Icon(
-                Icons.email,
-                color: MyColors.primaryColorDark,
-              ),
+          decoration: InputDecoration(
+            hintText: 'Correo electronico',
+            border: InputBorder.none,
+            contentPadding: const EdgeInsets.all(15),
+            hintStyle: TextStyle(
+              color: MyColors.primaryColorDark,
             ),
-            controller: emailTextController));
+            prefixIcon: Icon(
+              Icons.email,
+              color: MyColors.primaryColorDark,
+            ),
+          ),
+          controller: loginController.emailTextController,
+          keyboardType: TextInputType.emailAddress,
+        ));
   }
 
   Widget _textFieldPassword() {
@@ -137,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
               Icons.lock,
               color: MyColors.primaryColorDark,
             )),
-        controller: passwordTextController,
+        controller: loginController.passwordTextController,
       ),
     );
   }
@@ -146,9 +127,7 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 50, vertical: 5),
         child: ElevatedButton(
-            onPressed: () {
-              _accessToken(context);
-            },
+            onPressed: loginController.accessToken,
             style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(20.0),
                 shape: RoundedRectangleBorder(
@@ -170,14 +149,16 @@ class _LoginPageState extends State<LoginPage> {
         const SizedBox(
           width: 6,
         ),
-        Text(
-          'Registrate',
-          style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: MyColors.primaryColor,
-              height: 5,
-              fontSize: 16),
-        )
+        GestureDetector(
+            onTap: loginController.anchorRegisterPage,
+            child: Text(
+              'Registrate',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: MyColors.primaryColor,
+                  height: 5,
+                  fontSize: 16),
+            ))
       ],
     );
   }
