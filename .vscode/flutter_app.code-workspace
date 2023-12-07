@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "..",
+			"name": "/"
+		},
+		{
+			"path": "../lib",
+			"name": "app"
+		}
+	],
+	"settings": {
+		"editor.formatOnSave": true,
+		"window.zoomLevel": 0.7
+	}
+}
