@@ -74,7 +74,7 @@ linter:
     # Always prefer function references over typedefs.
     # Jumping twice in code to see the signature of a lambda sucks.
     # This is different from the flutter analysis_options
-    # avoid_private_typedef_functions: true
+    avoid_private_typedef_functions: false
 
     # Don't explicitly set defaults
     # avoid_redundant_argument_values: true
@@ -219,7 +219,7 @@ linter:
     unnecessary_await_in_return: false
 
     # Do not create lambdas when a tear-off will do.
-    unnecessary_lambdas: true
+    unnecessary_lambdas: false
 
     # Don't assign `null` when value is already `null`
     unnecessary_null_aware_assignments: true
