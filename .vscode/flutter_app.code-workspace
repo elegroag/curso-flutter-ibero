@@ -7,6 +7,18 @@
 		{
 			"path": "../lib",
 			"name": "app"
+		},
+		{
+			"path": "../lib/src/services"
+		},
+		{
+			"path": "../lib/src/utils"
+		},
+		{
+			"path": "../lib/src/models"
+		},
+		{
+			"path": "../lib/src/pages"
 		}
 	],
 	"settings": {

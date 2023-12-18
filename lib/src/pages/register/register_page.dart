@@ -259,7 +259,7 @@ class _RegisterPage extends State<RegisterPage> {
           child: Text(
             'Volver intentar login',
             style: TextStyle(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.normal,
                 color: MyColors.primaryColor,
                 height: 5,
                 fontSize: 16),

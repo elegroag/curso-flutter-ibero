@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/src/models/user_register.dart';
 import 'package:flutter_app/src/services/access_point.dart';
-import 'package:http/http.dart' as http;
 
 class RegisterController {
   RegisterController();
@@ -34,7 +33,7 @@ class RegisterController {
     passConfirmTxController.dispose();
   }
 
-  void registerUser() {
+  void registerUser() async {
     final UserRegister userRegister = UserRegister(
         firstName: firstNameTxController.text.trim(),
         lastName: lastNameTxController.text.trim(),
@@ -43,11 +42,11 @@ class RegisterController {
         password: passwordTxController.text.trim(),
         confirmPassword: passConfirmTxController.text.trim());
 
-    AccessPoint.register(userRegister).then((http.Response response) {
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-      anchorLoginPage();
-      // ignore: invalid_return_type_for_catch_error
-    }).catchError(print);
+    // ignore: invalid_return_type_for_catch_error
+    final response = await AccessPoint.register(userRegister).catchError(print);
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+    anchorLoginPage();
   }
 }
